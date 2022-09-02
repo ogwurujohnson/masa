@@ -3,57 +3,26 @@ package S3
 import (
 	"context"
 
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
+	bucket "github.com/ogwurujohnson/bucket/lib"
+	service "github.com/ogwurujohnson/bucket/lib/services"
 )
 
-// rename to s3Response or s3
-type Response struct {
-	bucket string
-	key    string
+type S3 struct {}
+
+var _ service.Service = &S3{}
+
+func (s *S3) Upload(ctx context.Context) (*bucket.Response, error) {
+	return nil, nil
 }
 
-type S3 interface {
-	Upload() (*Response, error)
-	Download() (*Response, error)
-	List() (*[]Response, error)
-	Delete() (bool, error)
+func (s *S3) Download(ctx context.Context) (*bucket.Response, error) {
+	return nil, nil
 }
 
-// convert to receiver method, so we can use the bucket and key in 
-// in the library, repeat for others
-
-// create a config file, where we have WithMethods that initializes bucket and key
-// example: https://github.com/gocardless/gocardless-pro-go/blob/master/options.go#L53
-// https://github.com/aws/aws-sdk-go
-func Upload(ctx context.Context) *Response {
-	sess := session.Must(session.NewSession())
-	svc := s3.New(sess)
-
-	_, err := svc.PutObjectWithContext(ctx, )
-	
-	return &Response{
-		bucket: "bucket name",
-		key:    "key",
-	}
+func (s *S3) List(ctx context.Context) (*[]bucket.Response, error) {
+	return nil, nil
 }
 
-func Download() *Response {
-	return &Response{
-		bucket: "bucket name",
-		key:    "key",
-	}
-}
-
-func List() *[]Response {
-	return &[]Response{
-		{
-			bucket: "bucket name",
-			key:    "key",
-		},
-	}
-}
-
-func Delete() bool {
-	return true
+func (s *S3) Delete(ctx context.Context) (bool, error) {
+	return true, nil
 }

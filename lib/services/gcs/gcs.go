@@ -1,65 +1,28 @@
-package Gcs
+package gcs
 
 import (
 	"context"
 
-	"cloud.google.com/go/storage"
+	bucket "github.com/ogwurujohnson/bucket/lib"
+	service "github.com/ogwurujohnson/bucket/lib/services"
 )
 
-type Response struct {
-	bucket string
-	key    string
+type Gcs struct {}
+
+var _ service.Service = &Gcs{}
+
+func (s *Gcs) Upload(ctx context.Context) (*bucket.Response, error) {
+	return nil, nil
 }
 
-type Gcs interface {
-	Upload() (*Response, error)
-	Download() (*Response, error)
-	List() (*[]Response, error)
-	Delete() (bool, error)
+func (s *Gcs) Download(ctx context.Context) (*bucket.Response, error) {
+	return nil, nil
 }
 
-func Upload(ctx context.Context) (*Response, error) {
-	_, err := storage.NewClient(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return &Response{
-		bucket: "bucket name",
-		key:    "key",
-	}, nil
+func (s *Gcs) List(ctx context.Context) (*[]bucket.Response, error) {
+	return nil, nil
 }
 
-func Download(ctx context.Context) (*Response, error) {
-	_, err := storage.NewClient(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return &Response{
-		bucket: "bucket name",
-		key:    "key",
-	}, nil
-}
-
-func List(ctx context.Context) (*[]Response, error) {
-	_, err := storage.NewClient(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return &[]Response{
-		{
-			bucket: "bucket name",
-			key:    "key",
-		},
-	}, nil
-}
-
-func Delete(ctx context.Context) (bool, error) {
-	_, err := storage.NewClient(ctx)
-	if err != nil {
-		return false, err
-	}
+func (s *Gcs) Delete(ctx context.Context) (bool, error) {
 	return true, nil
 }
