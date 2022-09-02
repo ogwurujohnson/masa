@@ -3,23 +3,24 @@ package gcs
 import (
 	"context"
 
-	bucket "github.com/ogwurujohnson/bucket/lib"
-	service "github.com/ogwurujohnson/bucket/lib/services"
+	"github.com/ogwurujohnson/bucket/lib/services"
 )
 
-type Gcs struct {}
+type Gcs struct {
+	// Config
+}
 
-var _ service.Service = &Gcs{}
+var _ services.Service = &Gcs{}
 
-func (s *Gcs) Upload(ctx context.Context) (*bucket.Response, error) {
+func (s *Gcs) Upload(ctx context.Context) (*services.Response, error) {
 	return nil, nil
 }
 
-func (s *Gcs) Download(ctx context.Context) (*bucket.Response, error) {
+func (s *Gcs) Download(ctx context.Context) (*services.Response, error) {
 	return nil, nil
 }
 
-func (s *Gcs) List(ctx context.Context) (*[]bucket.Response, error) {
+func (s *Gcs) List(ctx context.Context) (*[]services.Response, error) {
 	return nil, nil
 }
 

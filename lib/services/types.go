@@ -1,4 +1,4 @@
-package bucket
+package services
 
 type Response struct {
 	Bucket string
