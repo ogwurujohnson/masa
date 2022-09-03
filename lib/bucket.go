@@ -6,12 +6,12 @@ package bucket
 // )
 
 // func todo() {
-// 	service := gcs.Gcs{
-// 		// client
-// 	}
+// 	service := gcs.Build()
 
 // 	mapper := services.ServiceMappers{
-// 		Bucket: &service,
+// 		Bucket: service,
 // 	}
+	
+// 	mapper.Bucket.Delete()
 
 // }
