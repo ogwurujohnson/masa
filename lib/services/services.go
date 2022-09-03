@@ -8,7 +8,7 @@ type Service interface {
 	Upload(ctx context.Context, bucket string, key string, content interface{}) (*Response, error)
 	Download(ctx context.Context, bucket string, key string) (*Response, error)
 	List(ctx context.Context) (*[]Response, error)
-	Delete(ctx context.Context) (bool, error)
+	Delete(ctx context.Context, bucket string, key string) (bool, error)
 }
 
 type ServiceMappers struct {

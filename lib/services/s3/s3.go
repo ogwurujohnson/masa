@@ -2,12 +2,9 @@ package S3
 
 import (
 	"context"
-	"fmt"
 	"io"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/awserr"
-	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/ogwurujohnson/bucket/lib/services"
@@ -54,11 +51,6 @@ func (s *S3) Upload(ctx context.Context, bucket string, key string, content inte
 	})
 
 	if err != nil {
-		if aerr, ok := err.(awserr.Error); ok && aerr.Code() == request.CanceledErrorCode {
-			fmt.Printf("upload canceled due to timeout,  %v\n", err)
-			return nil, err
-		}
-		fmt.Printf("failed to upload object, %v\n", err)
 		return nil, err
 	}
 
@@ -71,21 +63,16 @@ func (s *S3) Upload(ctx context.Context, bucket string, key string, content inte
 func (s *S3) Download(ctx context.Context, bucket string, key string) (*services.Response, error) {
 	file, err := s.storage.GetObject(&s3.GetObjectInput{
 		Bucket: aws.String(bucket),
-		Key: aws.String(key),
+		Key:    aws.String(key),
 	})
 
 	if err != nil {
-		if aerr, ok := err.(awserr.Error); ok && aerr.Code() == request.CanceledErrorCode {
-			fmt.Printf("upload canceled due to timeout,  %v\n", err)
-			return nil, err
-		}
-		fmt.Printf("failed to upload object, %v\n", err)
 		return nil, err
 	}
 
 	return &services.Response{
-		Bucket: bucket,
-		Key: key,
+		Bucket:  bucket,
+		Key:     key,
 		Content: file,
 	}, nil
 }
@@ -94,6 +81,15 @@ func (s *S3) List(ctx context.Context) (*[]services.Response, error) {
 	return nil, nil
 }
 
-func (s *S3) Delete(ctx context.Context) (bool, error) {
+func (s *S3) Delete(ctx context.Context, bucket string, key string) (bool, error) {
+	_, err := s.storage.DeleteObject(&s3.DeleteObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
+	})
+
+	if err != nil {
+		return false, err
+	}
+
 	return true, nil
 }
