@@ -1,4 +1,4 @@
-package S3
+package s3
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/ogwurujohnson/bucket/lib/services"
+	"github.com/ogwurujohnson/bucket/lib/operation"
 )
 
 type S3 struct {
@@ -22,7 +22,7 @@ type Config struct {
 	timeoutSeconds *uint64
 }
 
-var _ services.Service = &S3{}
+var _ operation.Operation = &S3{}
 
 const (
 	DefaultTimeoutSeconds uint64 = 30
@@ -54,11 +54,11 @@ func Build(config *Config) *S3 {
 	return initialize(initSession, &timeout)
 }
 
-func (s *S3) Upload(ctx context.Context, bucket string, key string, content interface{}) (*services.Response, error) {
+func (s *S3) Upload(ctx context.Context, bucket string, key string, content interface{}) (*operation.OperationResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(*s.timeout))
 	defer cancel()
 
-	_, err := s.storage.PutObject(&s3.PutObjectInput{
+	_, err := s.storage.PutObjectWithContext(ctx, &s3.PutObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 		Body:   content.(io.ReadSeeker),
@@ -68,17 +68,17 @@ func (s *S3) Upload(ctx context.Context, bucket string, key string, content inte
 		return nil, err
 	}
 
-	return &services.Response{
+	return &operation.OperationResponse{
 		Bucket: bucket,
 		Key:    key,
 	}, nil
 }
 
-func (s *S3) Download(ctx context.Context, bucket string, key string) (*services.Response, error) {
+func (s *S3) Download(ctx context.Context, bucket string, key string) (*operation.OperationResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(*s.timeout))
 	defer cancel()
 
-	file, err := s.storage.GetObject(&s3.GetObjectInput{
+	file, err := s.storage.GetObjectWithContext(ctx, &s3.GetObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 	})
@@ -87,18 +87,18 @@ func (s *S3) Download(ctx context.Context, bucket string, key string) (*services
 		return nil, err
 	}
 
-	return &services.Response{
+	return &operation.OperationResponse{
 		Bucket:  bucket,
 		Key:     key,
 		Content: file,
 	}, nil
 }
 
-func (s *S3) List(ctx context.Context, bucket string, key string, pageSize int64) (*services.Response, error) {
+func (s *S3) List(ctx context.Context, bucket string, key string, pageSize int64) (*operation.OperationResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(*s.timeout))
 	defer cancel()
 
-	page, err := s.storage.ListObjectsV2(&s3.ListObjectsV2Input{
+	page, err := s.storage.ListObjectsV2WithContext(ctx, &s3.ListObjectsV2Input{
 		Prefix:  aws.String(key),
 		Bucket:  aws.String(bucket),
 		MaxKeys: aws.Int64(pageSize),
@@ -112,7 +112,7 @@ func (s *S3) List(ctx context.Context, bucket string, key string, pageSize int64
 	for i, objects := range page.Contents {
 		mapped[i] = *objects.Key
 	}
-	return &services.Response{
+	return &operation.OperationResponse{
 		Bucket: bucket,
 		Keys:   mapped,
 	}, nil
@@ -122,7 +122,7 @@ func (s *S3) Delete(ctx context.Context, bucket string, key string) (bool, error
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(*s.timeout))
 	defer cancel()
 	
-	_, err := s.storage.DeleteObject(&s3.DeleteObjectInput{
+	_, err := s.storage.DeleteObjectWithContext(ctx, &s3.DeleteObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 	})

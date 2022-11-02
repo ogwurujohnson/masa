@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/storage"
-	"github.com/ogwurujohnson/bucket/lib/services"
+	"github.com/ogwurujohnson/bucket/lib/operation"
 	"google.golang.org/api/iterator"
 )
 
@@ -16,7 +16,7 @@ type Gcs struct {
 	storage *storage.Client
 }
 
-var _ services.Service = &Gcs{}
+var _ operation.Operation = &Gcs{}
 
 const (
 	DefaultTimeoutSeconds uint64 = 30
@@ -44,7 +44,7 @@ func Build(timeoutSeconds *uint64) *Gcs {
 	return initialize(&timeout)
 }
 
-func (g *Gcs) Upload(ctx context.Context, bucket string, key string, content interface{}) (*services.Response, error) {
+func (g *Gcs) Upload(ctx context.Context, bucket string, key string, content interface{}) (*operation.OperationResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(*g.timeout))
 	defer cancel()
 
@@ -57,13 +57,14 @@ func (g *Gcs) Upload(ctx context.Context, bucket string, key string, content int
 		return nil, err
 	}
 
-	return &services.Response{
+	
+	return &operation.OperationResponse{
 		Bucket: bucket,
 		Key:    key,
 	}, nil
 }
 
-func (g *Gcs) Download(ctx context.Context, bucket string, key string) (*services.Response, error) {
+func (g *Gcs) Download(ctx context.Context, bucket string, key string) (*operation.OperationResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(*g.timeout))
 	defer cancel()
 
@@ -78,14 +79,14 @@ func (g *Gcs) Download(ctx context.Context, bucket string, key string) (*service
 		return nil, err
 	}
 
-	return &services.Response{
+	return &operation.OperationResponse{
 		Bucket:  bucket,
 		Key:     key,
 		Content: content,
 	}, nil
 }
 
-func (g *Gcs) List(ctx context.Context, bucket string, key string, pageSize int64) (*services.Response, error) {
+func (g *Gcs) List(ctx context.Context, bucket string, key string, pageSize int64) (*operation.OperationResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(*g.timeout))
 	defer cancel()
 
@@ -104,7 +105,7 @@ func (g *Gcs) List(ctx context.Context, bucket string, key string, pageSize int6
 		keys = append(keys, attrs.Name)
 	}
 
-	return &services.Response{
+	return &operation.OperationResponse{
 		Bucket: bucket,
 		Keys:   keys,
 	}, nil
@@ -117,7 +118,7 @@ func (g *Gcs) Delete(ctx context.Context, bucket string, key string) (bool, erro
 	if err := g.getBucket(bucket).Object(key).Delete(ctx); err != nil {
 		return false, err
 	}
-	
+
 	return true, nil
 }
 
