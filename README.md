@@ -1,6 +1,6 @@
 # Masa
 
-Masa was inspired by the [bucket storage](https://github.com/gocardless/bucket-store) gem by Gocardless 
+Masa is inspired by the [bucket storage](https://github.com/gocardless/bucket-store) gem by Gocardless 
 
 An abstraction layer on the top of file cloud storage systems such as Google Cloud
 Storage or S3. This module exposes a generic interface that allows interoperability
@@ -15,7 +15,7 @@ in the given provider. A valid key example would be
 This library is distributed as a Go package, and we recommend adding it to your Go mod:
 
 ```go
-go get "github.com/ogwurujohnson/masa
+go get "github.com/ogwurujohnson/masa"
 ```
 
 ## Design and Architecture
