@@ -1,4 +1,4 @@
-module github.com/ogwurujohnson/bucket
+module github.com/ogwurujohnson/masa
 
 go 1.18
 
