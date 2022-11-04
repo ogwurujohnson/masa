@@ -3,9 +3,9 @@ package services
 import (
 	"context"
 
-	"github.com/ogwurujohnson/bucket/lib/operation"
-	"github.com/ogwurujohnson/bucket/lib/services/gcs"
-	"github.com/ogwurujohnson/bucket/lib/services/s3"
+	"github.com/ogwurujohnson/masa/lib/operation"
+	"github.com/ogwurujohnson/masa/lib/services/gcs"
+	"github.com/ogwurujohnson/masa/lib/services/s3"
 )
 
 type ServiceMappers struct {

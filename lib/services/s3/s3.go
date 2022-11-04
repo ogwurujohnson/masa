@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/ogwurujohnson/bucket/lib/operation"
+	"github.com/ogwurujohnson/masa/lib/operation"
 )
 
 type S3 struct {

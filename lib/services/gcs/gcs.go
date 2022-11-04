@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/storage"
-	"github.com/ogwurujohnson/bucket/lib/operation"
+	"github.com/ogwurujohnson/masa/lib/operation"
 	"google.golang.org/api/iterator"
 )
 
