@@ -68,14 +68,15 @@ func (g *Gcs) Download(ctx context.Context, bucket string, key string) (*operati
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(*g.timeout))
 	defer cancel()
 
-	objectReader, err := g.getBucket(bucket).Object(key).NewReader(ctx)
+	file, err := g.getBucket(bucket).Object(key).NewReader(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	defer objectReader.Close()
-	content, err := io.ReadAll(objectReader)
+	defer file.Close()
+	content, err := io.ReadAll(file)
 	if err != nil {
+		log.Printf("Failed to read downloaded object: %v", err)
 		return nil, err
 	}
 
